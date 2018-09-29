@@ -1,0 +1,5 @@
+version: '3'
+services:
+  myappspa:
+    build: ./myappspa
+    image: ${ACR_URL}/myappspa:1 
