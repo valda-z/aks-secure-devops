@@ -12,7 +12,7 @@ angular.module('myApp.home', ['ngRoute', 'ui.bootstrap'])
 .controller('HomeCtrl', ['$scope', '$http', '$timeout', '$modal', function($scope, $http, $timeout, $modal) {
 
     $scope.data = {
-        item: { itemId: 0, comment: "", category: "" },
+        item: { itemId: "", comment: "", category: "" },
         items: null,
         comments: null,
         isedit: false

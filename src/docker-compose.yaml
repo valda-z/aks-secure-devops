@@ -3,3 +3,6 @@ services:
   myappspa:
     build: ./myappspa
     image: ${ACR_URL}/myappspa:1 
+  myapptodo:
+    build: ./myapptodo
+    image: ${ACR_URL}/myapptodo:1 
