@@ -1,10 +1,12 @@
 package com.microsoft.azuresample.acscicdtodo.controller;
 
+import com.microsoft.azuresample.acscicdtodo.model.LogEvent;;
 import com.microsoft.azuresample.acscicdtodo.model.ToDo;
 import com.microsoft.azuresample.acscicdtodo.model.ToDoDAO;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+import com.microsoft.azuresample.acscicdtodo.Utils.LogClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +16,9 @@ public class MainController {
     static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
     ToDoDAO dao=new ToDoDAO();
+    LogClient log = new LogClient();
 
-    @RequestMapping(value = "/api/like/{id}", method = { RequestMethod.PUT })
+    @RequestMapping(value = "/api/todo/{id}", method = { RequestMethod.PUT })
     public
     @ResponseBody
     ToDo putToDo(@RequestBody ToDo item) {
@@ -31,6 +34,7 @@ public class MainController {
     List<ToDo> getToDo() {
         LOG.info("Get todoes.");
         List<ToDo> ret = dao.query();
+        log.Log(new LogEvent("ToDo","GET", "Get todoes"));
         return ret;
     }
 
