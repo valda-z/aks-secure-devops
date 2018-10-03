@@ -6,3 +6,6 @@ services:
   myapptodo:
     build: ./myapptodo
     image: ${ACR_URL}/myapptodo:1 
+  myapplog:
+    build: ./myapplog
+    image: ${ACR_URL}/myapplog:1 
