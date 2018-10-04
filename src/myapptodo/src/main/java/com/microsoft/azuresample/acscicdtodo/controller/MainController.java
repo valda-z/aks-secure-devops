@@ -6,6 +6,7 @@ import com.microsoft.azuresample.acscicdtodo.model.ToDoDAO;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+import java.util.Date;
 import com.microsoft.azuresample.acscicdtodo.Utils.LogClient;
 
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class MainController {
     @ResponseBody
     ToDo putToDo(@RequestBody ToDo item) {
         LOG.info("PUT todo.");
+        item.setCreated(new Date());
         dao.update(item);
         item=dao.query(item.getId());
         return item;
@@ -44,6 +46,8 @@ public class MainController {
     ToDo postToDo(@RequestBody ToDo item) {
         LOG.info("POST todo.");
         item.setId(UUID.randomUUID().toString());
+        item.setCreated(new Date());
+        item.setUpdated(new Date());
         dao.create(item);
         item=dao.query(item.getId());
         return item;

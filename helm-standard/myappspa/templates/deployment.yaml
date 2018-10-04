@@ -31,12 +31,10 @@ spec:
               port: {{ .Values.service.internalPort }}
           env:
             - name: APPLICATION_INSIGHTS_IKEY
-              value: {{ .Values.applicationInsights.InstrumentationKey }}
-            - name: SQLSERVER_URL
               valueFrom:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
-                  key: connectionstring
+                  key: appinsightskey
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}

@@ -31,7 +31,20 @@ spec:
               port: {{ .Values.service.internalPort }}
           env:
             - name: APPLICATION_INSIGHTS_IKEY
-              value: {{ .Values.applicationInsights.InstrumentationKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: appinsightskey
+            - name: MONGO_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: mongopwd
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullname" . }}
+                  key: mongodb
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.nodeSelector }}
