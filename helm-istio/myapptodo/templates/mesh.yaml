@@ -1,0 +1,96 @@
+{{- if .Values.template.service -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ template "fullname" . }}-postgres
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hosts:
+  - {{ .Values.database.postgres }}
+  ports:
+  - number: 5432
+    name: tcp
+    protocol: tcp
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ template "fullname" . }}-appinsightsdc
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hosts:
+  - {{ .Values.database.appinsightsdc }}
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "fullname" . }}-appinsightsdc
+spec:
+  hosts:
+  - {{ .Values.database.appinsightsdc }}
+  tls:
+  - match:
+    - port: 443
+      sni_hosts:
+      - {{ .Values.database.appinsightsdc }}
+    route:
+    - destination:
+        host: {{ .Values.database.appinsightsdc }}
+        port:
+          number: 443
+      weight: 100
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ template "fullname" . }}-appinsightsrt
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hosts:
+  - {{ .Values.database.appinsightsrt }}
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "fullname" . }}-appinsightsrt
+spec:
+  hosts:
+  - {{ .Values.database.appinsightsrt }}
+  tls:
+  - match:
+    - port: 443
+      sni_hosts:
+      - {{ .Values.database.appinsightsrt }}
+    route:
+    - destination:
+        host: {{ .Values.database.appinsightsrt }}
+        port:
+          number: 443
+      weight: 100
+{{- end -}}

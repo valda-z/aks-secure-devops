@@ -1,0 +1,20 @@
+{{- if .Values.template.service -}}
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ template "fullname" . }}-mongo
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  hosts:
+  - {{ .Values.database.mongodb }}
+  ports:
+  - number: 10255
+    name: tcp
+    protocol: tcp
+  resolution: DNS
+  location: MESH_EXTERNAL
+{{- end -}}
